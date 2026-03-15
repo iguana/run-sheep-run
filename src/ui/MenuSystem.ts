@@ -5,6 +5,8 @@
  * Three.js canvas. Creates its own DOM subtree and manages its own lifecycle.
  */
 
+import { asset } from '../game/assetPath';
+
 // ─── Colour tokens ────────────────────────────────────────────────────────────
 const C = {
   bgPanel:      'rgba(20, 10, 30, 0.88)',
@@ -51,7 +53,7 @@ function injectStyles(): void {
     .sr-menu-bg {
       position: absolute;
       inset: 0;
-      background: url('/textures/splash.jpg') center center / cover no-repeat;
+      background: url('${asset('/textures/splash.jpg')}') center center / cover no-repeat;
       animation: srMenuBgZoom 20s ease-in-out infinite alternate;
     }
     @keyframes srMenuBgZoom {

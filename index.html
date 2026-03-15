@@ -80,7 +80,7 @@
       .splash-art {
         position: absolute;
         inset: 0;
-        background: url('/textures/splash.jpg') center center / cover no-repeat;
+        /* background set dynamically via JS to handle base path */
         animation: splashZoom 20s ease-in-out infinite alternate;
       }
 
@@ -217,6 +217,19 @@
 
     <span class="version">v0.1.0</span>
 
+    <script>
+      // Set splash art bg — use import.meta.url base or fallback for raw HTML
+      (function() {
+        var el = document.querySelector('.splash-art');
+        if (!el) return;
+        // In production, Vite sets <script type=module> which knows the base.
+        // For the loading screen we use a simple relative path that works
+        // because Vite copies public/ contents to the dist root alongside index.html.
+        el.style.backgroundImage = "url('textures/splash.jpg')";
+        el.style.backgroundSize = "cover";
+        el.style.backgroundPosition = "center center";
+      })();
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

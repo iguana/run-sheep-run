@@ -25,6 +25,7 @@
  */
 
 import * as THREE from 'three';
+import { asset as _asset } from '../game/assetPath';
 
 // ---------------------------------------------------------------------------
 // TrackRenderer
@@ -79,7 +80,7 @@ export class TrackRenderer {
 
     // Load track surface texture
     const loader = new THREE.TextureLoader();
-    const trackTex = loader.load('/textures/terrain/track.jpg');
+    const trackTex = loader.load(_asset('/textures/terrain/track.jpg'));
     trackTex.wrapS = THREE.RepeatWrapping;
     trackTex.wrapT = THREE.RepeatWrapping;
     trackTex.repeat.set(1, points.length * 0.3);

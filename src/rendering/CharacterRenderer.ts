@@ -41,6 +41,7 @@
 import * as THREE from 'three';
 import type { AnimalRunner } from '../data/characters';
 import { ANIM } from '../game/constants';
+import { asset } from '../game/assetPath';
 
 // ---------------------------------------------------------------------------
 // Texture-based sprite character cache
@@ -51,22 +52,22 @@ const _spriteCache = new Map<string, THREE.Texture | null>();
 
 /** Species-to-filename mapping for sprite textures (single idle frame). */
 const SPRITE_FILES: Record<string, string> = {
-  sheep: '/textures/characters/sheep_back.png',
-  fox: '/textures/characters/fox_back.png',
-  wolf: '/textures/characters/wolf_back.png',
-  cheetah: '/textures/characters/cheetah_back.png',
-  horse: '/textures/characters/horse.png',
-  bear: '/textures/characters/bear.png',
-  deer: '/textures/characters/deer.png',
+  sheep: asset('/textures/characters/sheep_back.png'),
+  fox: asset('/textures/characters/fox_back.png'),
+  wolf: asset('/textures/characters/wolf_back.png'),
+  cheetah: asset('/textures/characters/cheetah_back.png'),
+  horse: asset('/textures/characters/horse.png'),
+  bear: asset('/textures/characters/bear.png'),
+  deer: asset('/textures/characters/deer.png'),
 };
 
 /** Multi-frame animation sequences — frames cycle every PI/2 radians of legPhase. */
 const SPRITE_ANIM_FILES: Record<string, string[]> = {
   sheep: [
-    '/textures/characters/sheep_run_1.png',
-    '/textures/characters/sheep_run_2.png',
-    '/textures/characters/sheep_run_3.png',
-    '/textures/characters/sheep_run_4.png',
+    asset('/textures/characters/sheep_run_1.png'),
+    asset('/textures/characters/sheep_run_2.png'),
+    asset('/textures/characters/sheep_run_3.png'),
+    asset('/textures/characters/sheep_run_4.png'),
   ],
 };
 

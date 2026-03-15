@@ -27,13 +27,14 @@
  */
 
 import type { AudioManager } from './AudioManager';
+import { asset } from '../game/assetPath';
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
 /** Path relative to the web root where the manifest lives. */
-const MANIFEST_URL = '/soundtrack/manifest.json';
+const MANIFEST_URL = asset('/soundtrack/manifest.json');
 
 // ---------------------------------------------------------------------------
 // SoundtrackPlayer
@@ -195,7 +196,7 @@ export class SoundtrackPlayer {
     const track = this.tracks[this.currentIndex];
     if (track === undefined) return;
     // Tracks are filenames relative to /soundtrack/.
-    const url = track.startsWith('http') ? track : `/soundtrack/${track}`;
+    const url = track.startsWith('http') ? track : asset(`/soundtrack/${track}`);
     if (this.audio.src !== new URL(url, window.location.href).href) {
       this.audio.src = url;
       this.audio.load();

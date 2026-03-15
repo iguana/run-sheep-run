@@ -12,7 +12,7 @@
  */
 
 import * as THREE from 'three';
-
+import { asset } from '../game/assetPath';
 
 interface ParallaxLayer {
   mesh: THREE.Mesh;
@@ -36,7 +36,7 @@ export class ParallaxBackground {
 
     // Dolomites panoramic backdrop — large cylinder surrounding the scene
     const loader = new THREE.TextureLoader();
-    const tex = loader.load('/textures/backgrounds/dolomites.jpg');
+    const tex = loader.load(asset('/textures/backgrounds/dolomites.jpg'));
     tex.wrapS = THREE.RepeatWrapping;
     tex.wrapT = THREE.ClampToEdgeWrapping;
     tex.colorSpace = THREE.SRGBColorSpace;

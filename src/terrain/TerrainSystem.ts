@@ -19,6 +19,7 @@
 
 import * as THREE from 'three';
 import { TERRAIN_CONST } from '../game/constants';
+import { asset } from '../game/assetPath';
 import type { TrackPath } from './TrackPath';
 import type { TerrainType } from '../data/races';
 
@@ -129,7 +130,7 @@ export class TerrainSystem {
   constructor(scene: THREE.Scene) {
     this.scene = scene;
     const loader = new THREE.TextureLoader();
-    this.grassTexture = loader.load('/textures/terrain/grass.jpg');
+    this.grassTexture = loader.load(asset('/textures/terrain/grass.jpg'));
     this.grassTexture.wrapS = THREE.RepeatWrapping;
     this.grassTexture.wrapT = THREE.RepeatWrapping;
     this.grassTexture.repeat.set(8, 8);
