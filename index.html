@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐑</text></svg>" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#1a0a2e" />
+    <title>SheepRunner</title>
+    <style>
+      /* ---- Reset & base ---- */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --sunset-orange:  #ff6b35;
+        --golden-hour:    #ffa94d;
+        --deep-amber:     #e67700;
+        --deep-purple:    #1a0a2e;
+        --mid-purple:     #2d1b69;
+        --violet:         #6c3fc5;
+        --lavender:       #a78bfa;
+        --meadow-green:   #4ade80;
+        --fresh-grass:    #22c55e;
+        --dark-grass:     #166534;
+        --sky-blue:       #38bdf8;
+        --cloud-white:    #f0f9ff;
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--deep-purple);
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: none;
+        overscroll-behavior: none;
+      }
+
+      /* ---- Game container ---- */
+      #game-container {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      #game-container canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        touch-action: none;
+      }
+
+      /* ---- Loading screen ---- */
+      #loading-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        transition: opacity 0.8s ease;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        overflow: hidden;
+        background: #0a0a1a;
+      }
+
+      /* Splash art background */
+      .splash-art {
+        position: absolute;
+        inset: 0;
+        background: url('/textures/splash.jpg') center center / cover no-repeat;
+        animation: splashZoom 20s ease-in-out infinite alternate;
+      }
+
+      @keyframes splashZoom {
+        0%   { transform: scale(1);   }
+        100% { transform: scale(1.05); }
+      }
+
+      /* Gradient overlay for readability at bottom */
+      .splash-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          transparent 40%,
+          rgba(10, 10, 26, 0.4) 60%,
+          rgba(10, 10, 26, 0.85) 80%,
+          rgba(10, 10, 26, 0.95) 100%
+        );
+      }
+
+      /* ---- Loading content ---- */
+      .loading-content {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: max(6vh, env(safe-area-inset-bottom, 20px));
+        width: 100%;
+      }
+
+      /* ---- Progress bar ---- */
+      .progress-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        width: min(320px, 80vw);
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        overflow: hidden;
+        backdrop-filter: blur(4px);
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #4ade80, #ffa94d, #ff6b35);
+        box-shadow: 0 0 12px #ffa94d;
+        transition: width 0.3s ease;
+      }
+
+      .progress-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      }
+
+      /* ---- Tips ---- */
+      .tips {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .tip {
+        font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+        color: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        opacity: 0;
+        animation: fadeInTip 0.5s ease forwards;
+      }
+
+      @keyframes fadeInTip {
+        to { opacity: 1; }
+      }
+
+      /* ---- Hide loading when game starts ---- */
+      #loading-screen.hidden {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.8s ease;
+      }
+
+      /* ---- Version badge ---- */
+      .version {
+        position: fixed;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        right: 14px;
+        font-size: 0.65rem;
+        color: rgba(255,255,255,0.2);
+        letter-spacing: 0.1em;
+        z-index: 200;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Game canvas lives here -->
+    <div id="game-container"></div>
+
+    <!-- Loading screen -->
+    <div id="loading-screen" aria-live="polite" aria-label="Loading SheepRunner">
+      <!-- Splash art background -->
+      <div class="splash-art"></div>
+      <div class="splash-overlay"></div>
+
+      <!-- Bottom content -->
+      <div class="loading-content">
+        <div class="progress-wrap">
+          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span class="progress-label" id="progress-label">Loading...</span>
+        </div>
+        <div class="tips">
+          <p class="tip" style="animation-delay:0.2s">Steer left/right to stay on track</p>
+          <p class="tip" style="animation-delay:0.6s">Press SPACE to jump</p>
+        </div>
+      </div>
+    </div>
+
+    <span class="version">v0.1.0</span>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
