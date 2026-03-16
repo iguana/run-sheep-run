@@ -291,10 +291,6 @@ export class Game {
         }).catch(() => {});
         this.showRaceSelect();
       },
-      onSettings: () => {
-        this.ensureAudio().catch(() => {});
-        this.showSettings('menu');
-      },
     });
   }
 
@@ -496,6 +492,7 @@ export class Game {
     );
   }
 
+  // @ts-expect-error kept for future use
   private showSettings(returnTo: GameScene): void {
     this.state.transition('settings');
     this.hideAllUI();

@@ -37,7 +37,7 @@ function injectStyles(): void {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.45s ease;
@@ -127,16 +127,17 @@ function injectStyles(): void {
       50%       { opacity: var(--bright, 0.7);  transform: scale(1.2); }
     }
 
-    /* ── Content card ── */
+    /* ── Content card — bottom-aligned over splash art ── */
     .sr-menu-card {
       position: relative;
       z-index: 5;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 36px;
-      padding: 48px 32px 56px;
-      width: min(440px, 90vw);
+      gap: 16px;
+      padding: 32px 32px max(32px, env(safe-area-inset-bottom, 32px));
+      width: 100%;
+      max-width: 440px;
     }
 
     /* ── Title block ── */
@@ -404,100 +405,7 @@ function injectStyles(): void {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildStarField(): HTMLDivElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'sr-menu-stars';
-  for (let i = 0; i < 80; i++) {
-    const s = document.createElement('div');
-    s.className = 'sr-menu-star';
-    const big = Math.random() < 0.12;
-    s.style.cssText = [
-      `top:${(Math.random() * 62).toFixed(1)}%`,
-      `left:${(Math.random() * 100).toFixed(1)}%`,
-      `width:${big ? 3 : 2}px`,
-      `height:${big ? 3 : 2}px`,
-      `--dur:${(2 + Math.random() * 4).toFixed(1)}s`,
-      `--delay:${(Math.random() * 5).toFixed(2)}s`,
-      `--bright:${(0.4 + Math.random() * 0.6).toFixed(2)}`,
-    ].join(';');
-    wrap.appendChild(s);
-  }
-  return wrap;
-}
-
-function buildParticles(): HTMLDivElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'sr-particles';
-
-  const configs = [
-    { color: '#ff6b2b', size: 6,  peak: 0.5 },
-    { color: '#7c3aed', size: 8,  peak: 0.4 },
-    { color: '#06d6a0', size: 5,  peak: 0.55 },
-    { color: '#ffa94d', size: 10, peak: 0.3 },
-    { color: '#a78bfa', size: 7,  peak: 0.45 },
-    { color: '#ff6b2b', size: 4,  peak: 0.6 },
-    { color: '#06d6a0', size: 9,  peak: 0.35 },
-    { color: '#7c3aed', size: 6,  peak: 0.5 },
-    { color: '#ffa94d', size: 5,  peak: 0.55 },
-    { color: '#ffffff', size: 3,  peak: 0.25 },
-    { color: '#ff6b2b', size: 8,  peak: 0.4 },
-    { color: '#06d6a0', size: 6,  peak: 0.5 },
-  ];
-
-  configs.forEach((cfg) => {
-    const p = document.createElement('div');
-    p.className = 'sr-particle';
-    p.style.cssText = [
-      `left:${(Math.random() * 100).toFixed(1)}%`,
-      `width:${cfg.size}px`,
-      `height:${cfg.size}px`,
-      `background:${cfg.color}`,
-      `--dur:${(7 + Math.random() * 10).toFixed(1)}s`,
-      `--delay:${(Math.random() * 9).toFixed(2)}s`,
-      `--peak:${cfg.peak}`,
-    ].join(';');
-    wrap.appendChild(p);
-  });
-
-  return wrap;
-}
-
-function buildHills(): HTMLDivElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'sr-menu-hills';
-  wrap.innerHTML = `
-    <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <path d="M0,200 C120,140 240,100 360,120 C480,140 520,160 640,110
-               C760,60 860,40 980,70 C1100,100 1200,130 1320,100 L1440,90 L1440,320 L0,320 Z"
-            fill="#2d1b69" opacity="0.65"/>
-      <path d="M0,260 C80,220 200,178 320,200 C440,222 500,242 620,200
-               C740,158 840,148 960,173 C1080,198 1200,220 1320,194 L1440,184 L1440,320 L0,320 Z"
-            fill="#4c1d95" opacity="0.75"/>
-      <path d="M0,300 C100,268 220,248 340,264 C460,280 540,295 660,266
-               C780,240 880,238 1000,259 C1120,280 1230,294 1360,273 L1440,264 L1440,320 L0,320 Z"
-            fill="#14532d" opacity="0.88"/>
-      <rect x="0" y="312" width="1440" height="8" fill="#0f3d20"/>
-    </svg>
-  `;
-  return wrap;
-}
-
-function buildSheep(): HTMLDivElement {
-  const scene = document.createElement('div');
-  scene.className = 'sr-sheep-scene';
-  scene.innerHTML = `
-    <div class="sr-sheep-tail"></div>
-    <div class="sr-sheep-body"></div>
-    <div class="sr-sheep-head"></div>
-    <div class="sr-sheep-legs">
-      <div class="sr-leg sr-leg-fl"></div>
-      <div class="sr-leg sr-leg-bl"></div>
-      <div class="sr-leg sr-leg-fr"></div>
-      <div class="sr-leg sr-leg-br"></div>
-    </div>
-  `;
-  return scene;
-}
+// Old helper functions (stars, particles, hills, sheep) removed — splash art replaces them.
 
 function btn(label: string, icon: string, extraClass: string): HTMLButtonElement {
   const b = document.createElement('button');
@@ -524,45 +432,15 @@ export class MenuSystem {
     const overlay = document.createElement('div');
     overlay.className = 'sr-menu-overlay';
 
-    // Background
+    // Splash art background
     const bg = document.createElement('div');
     bg.className = 'sr-menu-bg';
     overlay.appendChild(bg);
 
-    // Stars
-    overlay.appendChild(buildStarField());
-
-    // Particles
-    overlay.appendChild(buildParticles());
-
-    // Horizon glow
-    const glow = document.createElement('div');
-    glow.className = 'sr-horizon-glow';
-    overlay.appendChild(glow);
-
-    // Hills
-    overlay.appendChild(buildHills());
-
-    // Content card (assembled but buttons wired in show())
+    // Content — bottom-aligned with buttons
     const card = document.createElement('div');
     card.className = 'sr-menu-card';
     card.dataset['role'] = 'card';
-
-    // Title
-    const titleWrap = document.createElement('div');
-    titleWrap.className = 'sr-menu-title-wrap';
-    const h1 = document.createElement('h1');
-    h1.className = 'sr-menu-title';
-    h1.textContent = 'SHEEP RUNNER';
-    const sub = document.createElement('p');
-    sub.className = 'sr-menu-subtitle';
-    sub.textContent = 'Run · Collect · Conquer';
-    titleWrap.appendChild(h1);
-    titleWrap.appendChild(sub);
-    card.appendChild(titleWrap);
-
-    // Sheep
-    card.appendChild(buildSheep());
 
     // Buttons placeholder (replaced in show())
     const btnWrap = document.createElement('div');
@@ -572,28 +450,17 @@ export class MenuSystem {
 
     overlay.appendChild(card);
 
-    // Version
-    const ver = document.createElement('span');
-    ver.className = 'sr-menu-version';
-    ver.textContent = 'v0.1.0';
-    overlay.appendChild(ver);
-
     return overlay;
   }
 
-  show(callbacks: { onPlay: () => void; onSettings: () => void }): void {
+  show(callbacks: { onPlay: () => void; onSettings?: () => void }): void {
     // Wire up buttons fresh each call so callbacks don't stale-close
     const btnWrap = this.overlay.querySelector('[data-role="btnwrap"]') as HTMLDivElement;
     btnWrap.innerHTML = '';
 
     const playBtn = btn('Play', '🐑', 'sr-btn-play');
     playBtn.addEventListener('click', () => callbacks.onPlay(), { once: true });
-
-    const settingsBtn = btn('Settings', '⚙', 'sr-btn-settings');
-    settingsBtn.addEventListener('click', () => callbacks.onSettings(), { once: true });
-
     btnWrap.appendChild(playBtn);
-    btnWrap.appendChild(settingsBtn);
 
     // Trigger transition on next frame so initial hidden state renders first
     requestAnimationFrame(() => {
